@@ -1,0 +1,30 @@
+.border
+  border 1px solid #ddd
+
+.container
+  border-left 10px solid #35495e
+
+table
+  @extend .border
+  width 100%
+  border-collapse collapse
+
+caption,
+th,
+td
+  @extend .border
+  padding 10px 15px
+
+caption
+  font-size 24px
+  background-color #eee
+  border-bottom-style none
+  text-align left
+
+th
+  width 180px
+  text-align left
+
+td
+  text-align left
+  color #606266
