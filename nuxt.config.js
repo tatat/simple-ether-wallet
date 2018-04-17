@@ -49,7 +49,8 @@ module.exports = {
   plugins: [
     { src: '~/plugins/nuxt-client-init.js', ssr: false },
     '~/plugins/element-ui',
-    '~/plugins/interval'
+    '~/plugins/interval',
+    '~/plugins/message-box'
   ],
 
   css: [

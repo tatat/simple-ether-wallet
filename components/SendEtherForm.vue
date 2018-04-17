@@ -89,43 +89,27 @@ export default {
     },
 
     async confirmAndTransfer(transactionParams) {
-      let _error = null
+      const messageBox = await this.$messageBox({
+        customClass: 'send-ether-confirmation-message-box',
+        message: this.$createElement(SendEtherFormConfirmation, {
+          props: {
+            ...this.form,
+            fee: ethUtils.fromWei(await ethUtils.getFee(transactionParams))
+          }
+        }),
+        showCancelButton: true,
+        confirmButtonText: 'OK',
+        cancelButtonText: 'Cancel'
+      })
 
       try {
-        await this.$msgbox({
-          customClass: 'send-ether-confirmation-message-box',
-          message: this.$createElement(SendEtherFormConfirmation, {
-            props: {
-              ...this.form,
-              fee: ethUtils.fromWei(await ethUtils.getFee(transactionParams))
-            }
-          }),
-          showCancelButton: true,
-          confirmButtonText: 'OK',
-          cancelButtonText: 'Cancel',
-          beforeClose: async (action, instance, done) => {
-            if (action === 'confirm') {
-              try {
-                await this.onConfirmed(transactionParams, instance)
-              } catch (error) {
-                _error = error
-              }
-            }
-
-            done()
-          }
-        })
-      } catch(error) {
-        if (error === 'cancel')
-          return false
-
-        throw error
+        if (messageBox.confirmed)
+          await this.onConfirmed(transactionParams, messageBox.instance)
+      } finally {
+        await messageBox.close()
       }
 
-      if (_error)
-        throw _error
-
-      return true
+      return messageBox.confirmed
     },
 
     async sendTransaction(params) {
